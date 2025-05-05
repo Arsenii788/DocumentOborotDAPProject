@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Люберецкий Техникум</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Люберецкий Техникум</h1>
+      <nav>
+        <ul>
+          <li><a href="{% url 'glavnaya' %}">Главная</a></li>
+          <li><a href="{% url 'signupuser' %}">Регистрация</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2>Добро пожаловать!</h2>
+        <p>Люберецкий Техникум - современное образовательное учреждение, готовящее квалифицированных специалистов для различных отраслей промышленности и сферы услуг.</p>
+        <a href="#order-form" class="button">Заказать справку</a>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="container">
+        <h2>О техникуме</h2>
+        <p>Краткая информация о техникуме: год основания, миссия, достижения, преподавательский состав и т.д.  Можно добавить фотографии.</p>
+        <img src="" alt="Люберецкий Техникум" width="500">
+      </div>
+    </section>
+
+    <section id="order-form" class="order-form">
+      <div class="container">
+        <h2>Заказ справки об обучении</h2>
+        <form action="process_form.php" method="POST">  <!-- Замените "process_form.php" на URL вашего скрипта обработки формы -->
+          <div class="form-group">
+            <label for="full_name">ФИО:</label>
+            <input type="text" id="full_name" name="full_name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="group_number">Номер группы:</label>
+            <input type="text" id="group_number" name="group_number" required>
+          </div>
+
+          <div class="form-group">
+            <label for="reason">Причина запроса:</label>
+            <textarea id="reason" name="reason" rows="4" required></textarea>
+          </div>
+
+          <button type="submit">Отправить запрос</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Люберецкий Техникум. Все права защищены.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

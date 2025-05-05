@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Регистрация</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'glavnaya' %}">Главная</a></li>
+                    <li><a href="{% url 'signupuser' %}">Регистрация</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="register">
+            <div class="container">
+                <h2>Создать аккаунт</h2>
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Люберецкий Техникум. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>
