@@ -1,0 +1,158 @@
+import sqlite3
+from sqlite3 import Error
+from hashlib import sha256
+
+class AuthDatabase:
+    def __init__(self, db_file="auth.db"):
+        """Инициализация базы данных"""
+        self.db_file = db_file
+        self.conn = None
+        
+        # Создаем таблицы при инициализации
+        self.create_tables()
+    
+    def create_connection(self):
+        """Создать соединение с базой данных SQLite"""
+        try:
+            self.conn = sqlite3.connect(self.db_file)
+            return self.conn
+        except Error as e:
+            print(e)
+        return None
+    
+    def create_tables(self):
+        """Создать таблицы для пользователей"""
+        sql_create_users_table = """
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            salt TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+        
+        conn = self.create_connection()
+        if conn is not None:
+            try:
+                c = conn.cursor()
+                c.execute(sql_create_users_table)
+                conn.commit()
+            except Error as e:
+                print(e)
+            finally:
+                if conn:
+                    conn.close()
+    
+    def register_user(self, username, email, password):
+        """Регистрация нового пользователя"""
+        # Генерируем соль и хеш пароля
+        salt = "random_salt_" + username  # В реальном проекте используйте os.urandom или secrets
+        password_hash = self._hash_password(password, salt)
+        
+        sql = """
+        INSERT INTO users(username, email, password_hash, salt)
+        VALUES(?, ?, ?, ?)
+        """
+        
+        conn = self.create_connection()
+        if conn is not None:
+            try:
+                c = conn.cursor()
+                c.execute(sql, (username, email, password_hash, salt))
+                conn.commit()
+                return True
+            except Error as e:
+                print(f"Ошибка регистрации: {e}")
+                return False
+            finally:
+                if conn:
+                    conn.close()
+        return False
+    
+    def login_user(self, username_or_email, password):
+        """Аутентификация пользователя"""
+        # Проверяем, является ли ввод email или username
+        if "@" in username_or_email:
+            sql = "SELECT username, password_hash, salt FROM users WHERE email = ?"
+        else:
+            sql = "SELECT username, password_hash, salt FROM users WHERE username = ?"
+        
+        conn = self.create_connection()
+        if conn is not None:
+            try:
+                c = conn.cursor()
+                c.execute(sql, (username_or_email,))
+                user = c.fetchone()
+                
+                if user:
+                    username, stored_hash, salt = user
+                    # Хешируем введенный пароль с той же солью
+                    input_hash = self._hash_password(password, salt)
+                    
+                    if input_hash == stored_hash:
+                        return username  # Успешный вход
+            except Error as e:
+                print(f"Ошибка входа: {e}")
+            finally:
+                if conn:
+                    conn.close()
+        return None
+    
+    def _hash_password(self, password, salt):
+        """Хеширование пароля с солью"""
+        return sha256((password + salt).encode('utf-8')).hexdigest()
+    
+    def user_exists(self, username=None, email=None):
+        """Проверить существование пользователя"""
+        if not username and not email:
+            return False
+        
+        sql = "SELECT 1 FROM users WHERE "
+        params = []
+        
+        if username and email:
+            sql += "username = ? OR email = ?"
+            params = [username, email]
+        elif username:
+            sql += "username = ?"
+            params = [username]
+        else:
+            sql += "email = ?"
+            params = [email]
+        
+        conn = self.create_connection()
+        if conn is not None:
+            try:
+                c = conn.cursor()
+                c.execute(sql, params)
+                return c.fetchone() is not None
+            except Error as e:
+                print(f"Ошибка проверки пользователя: {e}")
+            finally:
+                if conn:
+                    conn.close()
+        return False
+
+# Пример использования
+if __name__ == "__main__":
+    auth_db = AuthDatabase()
+    
+    # Регистрация пользователя
+    print("Регистрация пользователя...")
+    auth_db.register_user("testuser", "test@example.com", "securepassword123")
+    
+    # Проверка входа
+    print("\nПопытка входа...")
+    username = auth_db.login_user("testuser", "securepassword123")
+    if username:
+        print(f"Успешный вход! Добро пожаловать, {username}!")
+    else:
+        print("Неверные учетные данные.")
+    
+    # Проверка существования пользователя
+    print("\nПроверка существования пользователя:")
+    print("testuser существует?", auth_db.user_exists(username="testuser"))
+    print("unknownuser существует?", auth_db.user_exists(username="unknownuser"))
+    print("test@example.com существует?", auth_db.user_exists(email="test@example.com"))

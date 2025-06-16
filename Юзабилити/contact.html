@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServerHub - Контакты</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="logo.png" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="ServerHub Logo">
+                <h1>ServerHub</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">Команда</a></li>
+                    <li><a href="services.html">Услуги</a></li>
+                    <li><a href="contact.html" class="active">Контакты</a></li>
+                    <li><a href="login.html">Вход в систему</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
+                </ul>
+            </nav>
+            <div class="header-controls">
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск...">
+                    <button class="search-btn">🔍</button>
+                </div>
+                <button id="theme-toggle">🌓</button>
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+                <button id="logout-btn">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="contact-info">
+            <h2>Контактная информация</h2>
+            <div class="contact-details">
+                <div>
+                    <h3>Адрес</h3>
+                    <p>г. Москва, ул. Серверная, д. 42, офис 404</p>
+                </div>
+                <div>
+                    <h3>Телефон</h3>
+                    <p>+7 (495) 123-45-67</p>
+                </div>
+                <div>
+                    <h3>Email</h3>
+                    <p>info@serverhub.ru</p>
+                </div>
+                <div>
+                    <h3>Часы работы</h3>
+                    <p>Пн-Пт: 9:00 - 18:00</p>
+                    <p>Сб-Вс: техническая поддержка 24/7</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-form">
+            <h2>Напишите нам</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Тема:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Отправить</button>
+            </form>
+        </section>
+
+        <section class="map">
+            <h2>Как нас найти</h2>
+            <div class="map-container">
+                <!-- Здесь может быть встроенная карта Google или Yandex -->
+                <iframe src="https://www.google.com/maps/embed?..." frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Денисов А.П. ServerHub. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#">Twitter</a>
+                <a href="#">Facebook</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
